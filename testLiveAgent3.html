@@ -303,11 +303,11 @@
          
                 embedded_svc.addEventHandler("onChatRequestSuccess", function(data) {    
                   //For Amplitude Tracking on Start Button Click
-                  //console.log("Chat Test 123456789 success"); 
-                  if(amplitude && amplitude.getInstance && amplitude.getInstance().logEvent){
+                  console.log("Chat Test 123456789 success"); 
+                  /*if(amplitude && amplitude.getInstance && amplitude.getInstance().logEvent){
                                 var eventInfo = window.getAnalyticsData ? window.getAnalyticsData() :{}
                                  amplitude.getInstance().logEvent('clicked_[widget-chat]_[button-start-chatting]', eventInfo);
-                        }  
+                        }  */
                 });
          
          
@@ -320,11 +320,11 @@
                      // This event handler triggers when the chat button is clicked and causes a creation of a mutation observer so that a privacy statement can be dynamically added when the pre-chat form loads.
                     embedded_svc.addEventHandler("onHelpButtonClick", function(data) {
                         //For Amplitude Tracking in Non Logged in State
-                       // console.log("Chat Test 123456789 click");
-                        if(amplitude && amplitude.getInstance && amplitude.getInstance().logEvent){
+                        console.log("Chat Test 123456789 click");
+                        /*if(amplitude && amplitude.getInstance && amplitude.getInstance().logEvent){
                                 var eventInfo = window.getAnalyticsData ? window.getAnalyticsData() :{}
                                  amplitude.getInstance().logEvent('clicked_[widget-chat]', eventInfo);
-                        } 
+                        } */
                         const targetNode = document.body;
                         const config = { attributes: true, subtree: true};
                         // Callback function to execute when mutations are observed
