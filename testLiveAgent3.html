@@ -6,57 +6,407 @@
     <body>
     <!-- this is the code from Buttons/Invitations -->
     <script>
-        <style type='text/css'>
-            .embeddedServiceHelpButton .helpButton .uiButton {
-                background-color: #1599BB;
-                font-family: "Arial", sans-serif;
+        function decodeTextEndChat1(){
+            if($(".messageWrapper")[0]){
+                var elementArray = $(".messageWrapper")[0].childNodes;
+                for(var i=1 ; i< elementArray.length ;i++)
+                {
+                    var encodedString = encodeURIComponent(elementArray[i].childNodes[1].childNodes[0].childNodes[0].textContent);
+                    elementArray[i].childNodes[1].childNodes[0].childNodes[0].innerHTML= decodeURIComponent(encodedString);
+                }
             }
-            .embeddedServiceHelpButton .helpButton .uiButton:focus {
-                outline: 1px solid #1599BB;
-            }
-        </style>
+        }
+        var myVar1 = setInterval(function(){
+             if($('.uiOutputRichText').last()[0]){
+                clearInterval(myVar1);
+                decodeTextEndChat1();
+             }
+        }, 0); 
+                    
+            
+            
+        src='https://service.force.com/embeddedservice/5.0/esw.min.js';
+            // Retrieve the logged in user details from browser sessionStorage. This snippet provided by WU team
+           var getLoggedInUserdetails =  function() {
+                var userDetails = {};
+                var gatewayCutomer = window.sessionStorage.getItem('GatewayCustomer');
+                if(gatewayCutomer) {
+                    var gatewayCutomerObject = JSON.parse(gatewayCutomer);
+                    if(gatewayCutomerObject && gatewayCutomerObject.preferredCustomer && gatewayCutomerObject.preferredCustomer.accountNbr) {
+                        userDetails = { 
+                            "fname" : gatewayCutomerObject.name.firstName, 
+                            "lname" : gatewayCutomerObject.name.lastName, 
+                            "email" : gatewayCutomerObject.email
+                            };
+                    }                  
+                }
+                return JSON.stringify(userDetails);
+            };
         
-        <script type='text/javascript' src='https://service.force.com/embeddedservice/5.0/esw.min.js'></script>
-        <script type='text/javascript'>
+            let loggedInUserDetails = getLoggedInUserdetails();
+        
+            // Function that creates the Privacy Statement in the pre-chat form and also closes out the mutation observer.
+            var createPrivacyStatement = function(observer) {
+                var privacyDiv = document.createElement('DIV');
+                privacyDiv.className = 'embeddedChatPrivacy';
+                var privacyTextA = document.createTextNode("This chat may be logged and monitored. Please avoid sharing sensitive information such as payment information, social security numbers or passwords. ");
+                var privacyTextB = document.createTextNode(" about Western Union's privacy practices.");
+                var a = document.createElement('a');
+                var linkText = document.createTextNode("Learn more");
+                a.appendChild(linkText);
+                a.title = "Learn more";
+                a.href = "https://partners.westernunion.com/content/wucom/global/en/privacy-statement.html";
+                a.target = '_blank';
+                privacyDiv.appendChild(privacyTextA);
+                privacyDiv.appendChild(a);
+                privacyDiv.appendChild(privacyTextB);
+                document.querySelector("div.formContent.embeddedServiceSidebarForm").appendChild(privacyDiv);
+                $('.buttonWrapper').appendTo($('div.formContent.embeddedServiceSidebarForm'));
+                
+                if(observer) {
+                    console.log('observer not null, disconnecting');
+                    observer.disconnect();
+                }
+            }
+        
             var initESW = function(gslbBaseURL) {
                 embedded_svc.settings.displayHelpButton = true; //Or false
-                embedded_svc.settings.language = ''; //For example, enter 'en' or 'en-US'
-        
-                //embedded_svc.settings.defaultMinimizedText = '...'; //(Defaults to Chat with an Expert)
-                //embedded_svc.settings.disabledMinimizedText = '...'; //(Defaults to Agent Offline)
-        
-                //embedded_svc.settings.loadingText = ''; //(Defaults to Loading)
-                //embedded_svc.settings.storageDomain = 'yourdomain.com'; //(Sets the domain for your deployment so that visitors can navigate subdomains during a chat session)
-        
-                // Settings for Chat
-                //embedded_svc.settings.directToButtonRouting = function(prechatFormData) {
-                    // Dynamically changes the button ID based on what the visitor enters in the pre-chat form.
-                    // Returns a valid button ID.
-                //};
-                //embedded_svc.settings.prepopulatedPrechatFields = {}; //Sets the auto-population of pre-chat form fields
-                //embedded_svc.settings.fallbackRouting = []; //An array of button IDs, user IDs, or userId_buttonId
-                //embedded_svc.settings.offlineSupportMinimizedText = '...'; //(Defaults to Contact Us)
-        
+                embedded_svc.settings.language = 'en'; //For example, enter 'en' or 'en-US'
+                embedded_svc.settings.avatarImgURL = 'https://www.westernunion.com/content/dam/wu/us/en/Logo_40x40.png';
+                embedded_svc.settings.defaultMinimizedText = 'Chat'; //(Defaults to Chat with an Expert)
+                embedded_svc.settings.disabledMinimizedText = 'Chat'; //(Defaults to Agent Offline)
+                embedded_svc.settings.widgetFontSize = "14px";
+                embedded_svc.settings.storageDomain = window.location.host; //(Sets the domain for your deployment so that visitors can navigate subdomains during a chat session)
                 embedded_svc.settings.enabledFeatures = ['LiveAgent'];
                 embedded_svc.settings.entryFeature = 'LiveAgent';
         
-                embedded_svc.init(
-                    'https://wuicare--chatbot.my.salesforce.com',
-                    'https://chatbot-wucare.cs17.force.com/care',
-                    gslbBaseURL,
-                    '00Dg0000006VugZ',
-                    'WUCare_Embedded_Service',
-                    {
-                        baseLiveAgentContentURL: 'https://c.la1-c1cs-ord.salesforceliveagent.com/content',
-                        deploymentId: '5721500000007Ds',
-                        buttonId: '5731500000008OV',
-                        baseLiveAgentURL: 'https://d.la1-c1cs-ord.salesforceliveagent.com/chat',
-                        eswLiveAgentDevName: 'EmbeddedServiceLiveAgent_Parent04I1C000000k9bSUAQ_16d62323227',
-                        isOfflineSupportEnabled: false
+                /* Extra Prechat Form Details used to pass non-standard values to Salesforce */
+                embedded_svc.settings.extraPrechatFormDetails = [{
+                    "label":"CaseSubject",
+                    "value":"Western Union",
+                    "displayToAgent":true
+                }, {
+                    "label":"CaseChannelType",
+                    "value":"WU.com Money Transfer",
+                    "displayToAgent":true
+                }, {
+                    "label":"CaseIntakeChannel",
+                    "value":"Chat - Web",
+                    "displayToAgent":true
+                }, {
+                    "label":"CaseCallerType",
+                    "value":"Sender",
+                    "displayToAgent":true
+                }, {
+                    "label":"CaseChatCreatedCaseText",
+                    "value":"True",
+                    "displayToAgent":true
+                }, {
+                    "label":"PreferredLanguage",
+                    "value":"English",
+                    "displayToAgent":true
+                }, {
+                    "label":"ChatOrigin",
+                    "value":window.location.href,
+                    "transcriptFields":["Chat_Origin__c"],
+                    "displayToAgent":true
+                }, {
+                    // Case RecordType for General
+                    "label":"CaseRecordType",
+                    "value":"01215000001cpEwAAI"
+                }, {
+                    "label":"TempFirstName",
+                    "name":"FirstName",
+                    "value":"Visitor"
+                }];
+                
+                /* Extra Prechat Info used to map values from pre-chat form and extraprechatformdetails[] to Salesforce records */
+                embedded_svc.settings.extraPrechatInfo = [{
+                    // Not creating the person account or contact as this is done by Apex triggers established by WU already.
+                    "entityName": "Contact",
+                    "showOnCreate": false,
+                    "saveToTranscript": "ContactId",
+                    "entityFieldMaps": [{
+                      "isExactMatch": false,
+                      "fieldName": "FirstName",
+                      "doCreate": false,
+                      "doFind": false,
+                      "label": "First Name"
+                    }, {
+                      "isExactMatch": false,
+                      "fieldName": "LastName",
+                      "doCreate": false,
+                      "doFind": false,
+                      "label": "Last Name"
+                    }, {
+                      "isExactMatch": false,
+                      "fieldName": "Email",
+                      "doCreate": false,
+                      "doFind": true,
+                      "label": "Email"
+                    }]
+                  }, {
+                    // Creating the map for the case fields required for WU
+                    "entityName": "Case",
+                    "showOnCreate": true,
+                    "saveToTranscript": "CaseId",
+                    "entityFieldMaps": [{
+                        "doCreate":true,
+                        "doFind":false,
+                        "fieldName":"Subject",
+                        "isExactMatch":false,
+                        "label":"CaseSubject"
+                      }, {
+                        "doCreate":true,
+                        "doFind":false,
+                        "fieldName":"Status",
+                        "isExactMatch":false,
+                        "label":"Status"
+                      }, {
+                        "doCreate":true,
+                        "doFind":false,
+                        "fieldName":"Origin",
+                        "isExactMatch":false,
+                        "label":"Origin"
+                    }, {
+                        "doCreate":true,
+                        "doFind":false,
+                        "fieldName":"Channel_Type__c",
+                        "isExactMatch":false,
+                        "label":"CaseChannelType"
+                    }, {
+                        "doCreate":true,
+                        "doFind":false,
+                        "fieldName":"Intake_Channel__c",
+                        "isExactMatch":false,
+                        "label":"CaseIntakeChannel"
+                    }, {
+                        "doCreate":true,
+                        "doFind":false,
+                        "fieldName":"Caller_Type__c",
+                        "isExactMatch":false,
+                        "label":"CaseCallerType"
+                    }, {
+                        "doCreate":true,
+                        "doFind":false,
+                        "fieldName":"IsChatCreatedCaseText__c",
+                        "isExactMatch":false,
+                        "label":"CaseChatCreatedCaseText"
+                    }, {
+                        "doCreate":true,
+                        "doFind":false,
+                        "fieldName":"Preferred_Language__c",
+                        "isExactMatch":false,
+                        "label":"PreferredLanguage"
+                    }, {
+                        "doCreate":true,
+                        "doFind":false,
+                        "fieldName":"Supplied_First_Name__c",
+                        "isExactMatch":false,
+                        "label":"First Name"
+                    }, {
+                        "doCreate":true,
+                        "doFind":false,
+                        "fieldName":"Supplied_Last_Name__c",
+                        "isExactMatch":false,
+                        "label":"Last Name"
+                    }, {
+                        "doCreate":true,
+                        "doFind":false,
+                        "fieldName":"SuppliedEmail",
+                        "isExactMatch":false,
+                        "label":"Email"
+                    }, {
+                        "doCreate": true,
+                        "doFind": false,
+                        "fieldName": "RecordTypeId",
+                        "isExactMatch": false, 
+                        "label": "CaseRecordType"
+                    }]
+                }];
+                
+                 function decodeTextEndChat(){
+                    if($(".messageWrapper")[0]){
+                        var elementArray = $(".messageWrapper")[0].childNodes;
+                        for(var i=0 ; i< elementArray.length ;i++)
+                        {
+                            var encodedString = encodeURIComponent($(".messageWrapper")[0].childNodes[i].childNodes[1].childNodes[0].childNodes[0].textContent);
+                            elementArray[i].childNodes[1].childNodes[0].childNodes[0].innerHTML= decodeURIComponent(encodedString);
+                        }
                     }
-                );
-            };
+                }
+                
+                 function decodeTextEndChat2(){
+                    if($(".messageWrapper")[0]){
+                        var elementArray = $(".messageWrapper")[0].childNodes;
+                        for(var i=0 ; i< elementArray.length-1 ;i++)
+                        {
+                            var encodedString = encodeURIComponent($(".messageWrapper")[0].childNodes[i].childNodes[1].childNodes[0].childNodes[0].textContent);
+                            elementArray[i].childNodes[1].childNodes[0].childNodes[0].innerHTML= decodeURIComponent(encodedString);
+                        }
+                    }
+                }
+                //onChatEndedByAgent
+                embedded_svc.addEventHandler("onChatEndedByAgent", function(data) {
+                    console.log('onChatEndedByChasitor');
+                    var myVar = setInterval(function(){
+                         if(document.querySelector('.messageArea')){
+                            clearInterval(myVar);
+                            decodeTextEndChat2();
+                         }
+                    }, 0);  
+                });
+                
+                embedded_svc.addEventHandler("onChatEndedByChasitor", function(data) {
+                    console.log('onChatEndedByChasitor');
+                    var myVar = setInterval(function(){
+                         if(document.querySelector('.messageArea')){
+                            clearInterval(myVar);
+                            decodeTextEndChat2();
+                         }
+                    }, 0);  
+                });
+           
+                //onAgentMessage
+                embedded_svc.addEventHandler("onAgentMessage", function(data) {
+                 console.log("onChasitorMessage event was fired.");
+                    var myVar = setInterval(function(){
+                         if(document.querySelector('.messageArea')){
+                            clearInterval(myVar);
+                            decodeTextEndChat();
+                         }
+                    }, 0); 
+                     
+                });
+                
+                embedded_svc.addEventHandler("onChasitorMessage", function(data) {
+                 console.log("onChasitorMessage event was fired.");
+                    var myVar = setInterval(function(){
+                         if(document.querySelector('.messageArea')){
+                            clearInterval(myVar);
+                            decodeTextEndChat();
+                         }
+                    }, 0); 
+                     
+                });
+                
+         
+                embedded_svc.addEventHandler("onChatRequestSuccess", function(data) {    
+                  //For Amplitude Tracking on Start Button Click
+                  //console.log("Chat Test 123456789 success"); 
+                  if(amplitude && amplitude.getInstance && amplitude.getInstance().logEvent){
+                                var eventInfo = window.getAnalyticsData ? window.getAnalyticsData() :{}
+                                 amplitude.getInstance().logEvent('clicked_[widget-chat]_[button-start-chatting]', eventInfo);
+                        }  
+                });
+         
+         
+                embedded_svc.addEventHandler("onChatConferenceInitiated", function(data) {           
+                 console.log("onChatReconnectSuccessful event was fired.");
+                });
         
+                // Check to see if user is logged in or not
+                if(loggedInUserDetails === '{}') {
+                     // This event handler triggers when the chat button is clicked and causes a creation of a mutation observer so that a privacy statement can be dynamically added when the pre-chat form loads.
+                    embedded_svc.addEventHandler("onHelpButtonClick", function(data) {
+                        //For Amplitude Tracking in Non Logged in State
+                       // console.log("Chat Test 123456789 click");
+                        if(amplitude && amplitude.getInstance && amplitude.getInstance().logEvent){
+                                var eventInfo = window.getAnalyticsData ? window.getAnalyticsData() :{}
+                                 amplitude.getInstance().logEvent('clicked_[widget-chat]', eventInfo);
+                        } 
+                        const targetNode = document.body;
+                        const config = { attributes: true, subtree: true};
+                        // Callback function to execute when mutations are observed
+                        const mutationCallback = function(mutationsList, observer) {
+                            for(let mutation of mutationsList) {
+                                if (mutation.type === 'attributes' && mutation.target.className === 'Email slds-style-inputtext input') {
+                                    createPrivacyStatement(observer);
+                                    break;
+                                }
+                            }
+                        };
+                        // Create an observer instance linked to the callback function
+                        const observer = new MutationObserver(mutationCallback);
+        
+                        // Start observing the target node for configured mutations
+                        observer.observe(targetNode, config);
+                    });
+                    /**** TODO ****
+                        - Change the parameters below for each different org, the below corresponds to the embedded service deployment that has pre-chat enabled (non-auth). 
+                        - To get the code below, go to Setup>Embedded Service> Get Code
+                    */
+                    embedded_svc.init(
+                        'https://wuicare--chatbot.my.salesforce.com',
+                        'https://chatbot-wucare.cs17.force.com/care',
+                        gslbBaseURL,
+                        '00Dg0000006VugZ',
+                        'WUCare_Embedded_Service_Non_Auth',
+                        {
+                            baseLiveAgentContentURL: 'https://c.la1-c1cs-ord.salesforceliveagent.com/content',
+                            deploymentId: '5721500000007Ds',
+                            buttonId: '5731500000008OV',
+                            baseLiveAgentURL: 'https://d.la1-c1cs-ord.salesforceliveagent.com/chat',
+                            eswLiveAgentDevName: 'EmbeddedServiceLiveAgent_Parent04I1C000000k9bNUAQ_16d622f4afb',
+                            isOfflineSupportEnabled: false
+                        }
+                    );
+                } else {
+                     
+                    /* Mapping the values from the sessionStorage to pre-chat values to pass into Salesforce */
+                    const loggedInUser = JSON.parse(loggedInUserDetails);
+                    const tempFirstName = {
+                        "label": "First Name",
+                        "value": loggedInUser.fname,
+                        "displayToAgent": true
+                    };
+                    const tempLastName = {
+                        "label": "Last Name",
+                        "value": loggedInUser.lname,
+                        "displayToAgent": true
+                    }; 
+                    const tempEmail = {
+                        "label": "Email",
+                        "value": loggedInUser.email,
+                        "displayToAgent": true
+                    };
+                    
+                    
+                    //For Amplitude Tracking in Logged in State
+                    embedded_svc.addEventHandler("onHelpButtonClick", function(data) {
+                        //console.log("Chat Test 123456789 click loggedin");
+                        if(amplitude && amplitude.getInstance && amplitude.getInstance().logEvent){
+                                var eventInfo = window.getAnalyticsData ? window.getAnalyticsData() :{}
+                                 amplitude.getInstance().logEvent('clicked_[widget]_[chat]', eventInfo);
+                        }
+                    })
+        
+                    embedded_svc.settings.extraPrechatFormDetails.unshift(tempFirstName, tempLastName, tempEmail);
+                    /**** TODO ****
+                        - Change the parameters below for each different org, the below corresponds to the embedded service deployment that has pre-chat disabled. 
+                        - To get the code below, go to Setup>Embedded Service> Get Code
+                    */
+                    embedded_svc.init(
+                        'https://wuicare--chatbot.my.salesforce.com',
+                        'https://chatbot-wucare.cs17.force.com/care',
+                        gslbBaseURL,
+                        '00Dg0000006VugZ',
+                        'WUCare_Embedded_Service',
+                        {
+                            baseLiveAgentContentURL: 'https://c.la1-c1cs-ord.salesforceliveagent.com/content',
+                            deploymentId: '5721500000007Ds',
+                            buttonId: '5731500000008OV',
+                            baseLiveAgentURL: 'https://d.la1-c1cs-ord.salesforceliveagent.com/chat',
+                            eswLiveAgentDevName: 'EmbeddedServiceLiveAgent_Parent04I1C000000k9bSUAQ_16d62323227',
+                            isOfflineSupportEnabled: false
+                        }
+                    ); 
+                }        
+            };
+            /**** TODO ****
+                        - Change the src below in the s.setAttribute() to point to the right org.
+                        - To get the code below, go to Setup>Embedded Service> Get Code
+            */
             if (!window.embedded_svc) {
                 var s = document.createElement('script');
                 s.setAttribute('src', 'https://wuicare--chatbot.my.salesforce.com/embeddedservice/5.0/esw.min.js');
@@ -67,33 +417,6 @@
             } else {
                 initESW('https://service.force.com');
             }
-        </script>
     </script>
-
-        <div class="embeddedServiceHelpButton">
-            <div class="helpButton"><button class="uiButton helpButtonEnabled" href="javascript:void(0)"><span class="embeddedServiceIcon" aria-hidden="true" data-icon="" style="display: inline-block;"></span><span class="helpButtonLabel" id="helpButtonSpan" aria-live="polite" aria-atomic="true"><span class="assistiveText">Live chat:</span><span class="message">Chat</span></span></button></div>
-        </div>
-
-        <button>Start Chat</button>
-    
-        <a id="liveagent_button_online_5731500000008OV" href="javascript://Chat" style="display: none;" onclick="liveagent.startChat('5731500000008OV')"><!-- Online Chat Content -->Chat Now</a>
-        <div id="liveagent_button_offline_5731500000008OV" style="display: none;"><!-- Offline Chat Content -->Sorry, there are no available agents</div>
-        <script type="text/javascript">
-            if (!window._laq) { window._laq = []; }
-                window._laq.push(function(){liveagent.showWhenOnline('5731500000008OV', document.getElementById('liveagent_button_online_5731500000008OV'));
-                liveagent.showWhenOffline('5731500000008OV', document.getElementById('liveagent_button_offline_5731500000008OV'));
-            });
-        </script>    
-
-        <!-- this is the code from Deployment-->
-        <script type='text/javascript' src='https://c.la1-c1cs-ord.salesforceliveagent.com/content/g/js/48.0/deployment.js'></script>
-        <script type='text/javascript'>
-            liveagent.setName('Tony Do');
-            liveagent.addCustomDetail('Email', 'tony.do@slalom.com').saveToTranscript('Email__c');
-            liveagent.addCustomDetail('First Name', 'Tony').saveToTranscript('First_Name__c');
-            liveagent.addCustomDetail('Last Name', 'Do').saveToTranscript('Last_Name__c');
-            liveagent.addCustomDetail('Lex Transcript', 'something something something');
-            liveagent.init('https://d.la1-c1cs-ord.salesforceliveagent.com/chat', '5721500000007Ds', '00Dg0000006VugZ');
-        </script>
     </body>
 </html>
