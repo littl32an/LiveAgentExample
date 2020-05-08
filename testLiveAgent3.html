@@ -65,6 +65,24 @@
 
     <script type='text/javascript' src='https://service.force.com/embeddedservice/5.0/esw.min.js'></script>
     <script type='text/javascript'>
+
+        function decodeTextEndChat1(){
+            if($(".messageWrapper")[0]){
+                var elementArray = $(".messageWrapper")[0].childNodes;
+                for(var i=1 ; i< elementArray.length ;i++)
+                {
+                    var encodedString = encodeURIComponent(elementArray[i].childNodes[1].childNodes[0].childNodes[0].textContent);
+                    elementArray[i].childNodes[1].childNodes[0].childNodes[0].innerHTML= decodeURIComponent(encodedString);
+                }
+            }
+        }
+        var myVar1 = setInterval(function(){
+             if($('.uiOutputRichText').last()[0]){
+                clearInterval(myVar1);
+                decodeTextEndChat1();
+             }
+        }, 0); 
+        
         var getLoggedInUserdetails =  function() {
             var userDetails = {};
             var gatewayCutomer = window.sessionStorage.getItem('GatewayCustomer');
@@ -461,9 +479,9 @@
     </script>
     </script>
 
-        <div class="embeddedServiceHelpButton embedded_svc">
+        <div class="embeddedServiceHelpButton">
             <div class="helpButton">
-                <button class="uiButton helpButtonEnabled embedded_svc" href="javascript://Chat" onclick="liveagent.startChat('5731500000008OV')">
+                <button class="uiButton helpButtonEnabled">
                     <span class="embeddedServiceIcon" aria-hidden="true" data-icon="" style="display: inline-block;"></span>
                     <span class="helpButtonLabel" id="helpButtonSpan" aria-live="polite" aria-atomic="true">
                         <span class="assistiveText">Live chat:</span>
