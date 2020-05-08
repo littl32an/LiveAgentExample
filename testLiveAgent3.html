@@ -1,6 +1,6 @@
 <html>
     <head>
-
+        <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
     </head>
 
     <body>
@@ -428,38 +428,6 @@
                 initESW('https://service.force.com');
             }
     </script>
-
-        <div class="embeddedServiceHelpButton">
-            <div class="helpButton">
-                <button class="uiButton helpButtonEnabled" href="javascript://Chat">
-                    <span class="embeddedServiceIcon" aria-hidden="true" data-icon="" style="display: inline-block;"></span>
-                    <span class="helpButtonLabel" id="helpButtonSpan" aria-live="polite" aria-atomic="true">
-                        <span class="assistiveText">Live chat:</span>
-                        <span class="message">Chat</span>
-                    </span>
-                </button>
-            </div>
-        </div>
-    
-        <a id="liveagent_button_online_5731500000008OV" href="javascript://Chat" style="display: none;" onclick="liveagent.startChat('5731500000008OV')"><!-- Online Chat Content -->Chat Now</a>
-        <div id="liveagent_button_offline_5731500000008OV" style="display: none;"><!-- Offline Chat Content -->Sorry, there are no available agents</div>
-        <script type="text/javascript">
-            if (!window._laq) { window._laq = []; }
-                window._laq.push(function(){liveagent.showWhenOnline('5731500000008OV', document.getElementById('liveagent_button_online_5731500000008OV'));
-                liveagent.showWhenOffline('5731500000008OV', document.getElementById('liveagent_button_offline_5731500000008OV'));
-            });
-        </script>    
-
-        <!-- this is the code from Deployment-->
-        <script type='text/javascript' src='https://c.la1-c1cs-ord.salesforceliveagent.com/content/g/js/48.0/deployment.js'></script>
-        <script type='text/javascript'>
-            liveagent.setName('Tony Do');
-            liveagent.addCustomDetail('Email', 'tony.do@slalom.com').saveToTranscript('Email__c');
-            liveagent.addCustomDetail('First Name', 'Tony').saveToTranscript('First_Name__c');
-            liveagent.addCustomDetail('Last Name', 'Do').saveToTranscript('Last_Name__c');
-            liveagent.addCustomDetail('Lex Transcript', 'something something something');
-            liveagent.init('https://d.la1-c1cs-ord.salesforceliveagent.com/chat', '5721500000007Ds', '00Dg0000006VugZ');
-        </script>
     </body>
 </html>
     
