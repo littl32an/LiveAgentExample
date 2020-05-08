@@ -5,76 +5,81 @@
 
     <body>
     <!-- this is the code from Buttons/Invitations -->
-    <script>
-        <style type='text/css'>
-            .embeddedServiceHelpButton .helpButton .uiButton {
-                background-color: #1599BB;
-                font-family: "Arial", sans-serif;
-            }
-            .embeddedServiceHelpButton .helpButton .uiButton:focus {
-                outline: 1px solid #1599BB;
-            }
-        </style>
-        
-        <script type='text/javascript' src='https://service.force.com/embeddedservice/5.0/esw.min.js'></script>
-        <script type='text/javascript'>
-            var initESW = function(gslbBaseURL) {
-                embedded_svc.settings.displayHelpButton = true; //Or false
-                embedded_svc.settings.language = ''; //For example, enter 'en' or 'en-US'
-        
-                //embedded_svc.settings.defaultMinimizedText = '...'; //(Defaults to Chat with an Expert)
-                //embedded_svc.settings.disabledMinimizedText = '...'; //(Defaults to Agent Offline)
-        
-                //embedded_svc.settings.loadingText = ''; //(Defaults to Loading)
-                //embedded_svc.settings.storageDomain = 'yourdomain.com'; //(Sets the domain for your deployment so that visitors can navigate subdomains during a chat session)
-        
-                // Settings for Chat
-                //embedded_svc.settings.directToButtonRouting = function(prechatFormData) {
-                    // Dynamically changes the button ID based on what the visitor enters in the pre-chat form.
-                    // Returns a valid button ID.
-                //};
-                //embedded_svc.settings.prepopulatedPrechatFields = {}; //Sets the auto-population of pre-chat form fields
-                //embedded_svc.settings.fallbackRouting = []; //An array of button IDs, user IDs, or userId_buttonId
-                //embedded_svc.settings.offlineSupportMinimizedText = '...'; //(Defaults to Contact Us)
-        
-                embedded_svc.settings.enabledFeatures = ['LiveAgent'];
-                embedded_svc.settings.entryFeature = 'LiveAgent';
-        
-                embedded_svc.init(
-                    'https://wuicare--chatbot.my.salesforce.com',
-                    'https://chatbot-wucare.cs17.force.com/care',
-                    gslbBaseURL,
-                    '00Dg0000006VugZ',
-                    'WUCare_Embedded_Service',
-                    {
-                        baseLiveAgentContentURL: 'https://c.la1-c1cs-ord.salesforceliveagent.com/content',
-                        deploymentId: '5721500000007Ds',
-                        buttonId: '5731500000008OV',
-                        baseLiveAgentURL: 'https://d.la1-c1cs-ord.salesforceliveagent.com/chat',
-                        eswLiveAgentDevName: 'EmbeddedServiceLiveAgent_Parent04I1C000000k9bSUAQ_16d62323227',
-                        isOfflineSupportEnabled: false
-                    }
-                );
+    <style type='text/css'>
+        .embeddedServiceHelpButton .helpButton .uiButton {
+            background-color: #1599BB;
+            font-family: "Arial", sans-serif;
+        }
+        .embeddedServiceHelpButton .helpButton .uiButton:focus {
+            outline: 1px solid #1599BB;
+        }
+    </style>
+
+    <script type='text/javascript' src='https://service.force.com/embeddedservice/5.0/esw.min.js'></script>
+    <script type='text/javascript'>
+        var initESW = function(gslbBaseURL) {
+            embedded_svc.settings.displayHelpButton = true; //Or false
+            embedded_svc.settings.language = 'en'; //For example, enter 'en' or 'en-US'
+            embedded_svc.settings.avatarImgURL = 'https://www.westernunion.com/content/dam/wu/us/en/Logo_40x40.png';
+            embedded_svc.settings.defaultMinimizedText = 'Chat'; //(Defaults to Chat with an Expert)
+            embedded_svc.settings.disabledMinimizedText = 'Chat'; //(Defaults to Agent Offline)
+            embedded_svc.settings.widgetFontSize = "14px";
+            //embedded_svc.settings.loadingText = ''; //(Defaults to Loading)
+            embedded_svc.settings.storageDomain = window.location.host; //(Sets the domain for your deployment so that visitors can navigate subdomains during a chat session)
+
+            // Settings for Chat
+            //embedded_svc.settings.directToButtonRouting = function(prechatFormData) {
+                // Dynamically changes the button ID based on what the visitor enters in the pre-chat form.
+                // Returns a valid button ID.
+            //};
+            //embedded_svc.settings.prepopulatedPrechatFields = {}; //Sets the auto-population of pre-chat form fields
+            //embedded_svc.settings.fallbackRouting = []; //An array of button IDs, user IDs, or userId_buttonId
+            //embedded_svc.settings.offlineSupportMinimizedText = '...'; //(Defaults to Contact Us)
+
+            embedded_svc.settings.enabledFeatures = ['LiveAgent'];
+            embedded_svc.settings.entryFeature = 'LiveAgent';
+
+            embedded_svc.init(
+                'https://wuicare--chatbot.my.salesforce.com',
+                'https://chatbot-wucare.cs17.force.com/care',
+                gslbBaseURL,
+                '00Dg0000006VugZ',
+                'WUCare_Embedded_Service',
+                {
+                    baseLiveAgentContentURL: 'https://c.la1-c1cs-ord.salesforceliveagent.com/content',
+                    deploymentId: '5721500000007Ds',
+                    buttonId: '5731500000008OV',
+                    baseLiveAgentURL: 'https://d.la1-c1cs-ord.salesforceliveagent.com/chat',
+                    eswLiveAgentDevName: 'EmbeddedServiceLiveAgent_Parent04I1C000000k9bSUAQ_16d62323227',
+                    isOfflineSupportEnabled: false
+                }
+            );
+        };
+
+        if (!window.embedded_svc) {
+            var s = document.createElement('script');
+            s.setAttribute('src', 'https://wuicare--chatbot.my.salesforce.com/embeddedservice/5.0/esw.min.js');
+            s.onload = function() {
+                initESW(null);
             };
-        
-            if (!window.embedded_svc) {
-                var s = document.createElement('script');
-                s.setAttribute('src', 'https://wuicare--chatbot.my.salesforce.com/embeddedservice/5.0/esw.min.js');
-                s.onload = function() {
-                    initESW(null);
-                };
-                document.body.appendChild(s);
-            } else {
-                initESW('https://service.force.com');
-            }
-        </script>
+            document.body.appendChild(s);
+        } else {
+            initESW('https://service.force.com');
+        }
+    </script>
     </script>
 
-        <div class="embeddedServiceHelpButton">
-            <div class="helpButton"><button class="uiButton helpButtonEnabled" href="javascript:void(0)"><span class="embeddedServiceIcon" aria-hidden="true" data-icon="" style="display: inline-block;"></span><span class="helpButtonLabel" id="helpButtonSpan" aria-live="polite" aria-atomic="true"><span class="assistiveText">Live chat:</span><span class="message">Chat</span></span></button></div>
+        <div class="embeddedServiceHelpButton embedded_svc">
+            <div class="helpButton">
+                <button class="uiButton helpButtonEnabled embedded_svc" href="javascript://Chat" onclick="liveagent.startChat('5731500000008OV')">
+                    <span class="embeddedServiceIcon" aria-hidden="true" data-icon="" style="display: inline-block;"></span>
+                    <span class="helpButtonLabel" id="helpButtonSpan" aria-live="polite" aria-atomic="true">
+                        <span class="assistiveText">Live chat:</span>
+                        <span class="message">Chat</span>
+                    </span>
+                </button>
+            </div>
         </div>
-
-        <button>Start Chat</button>
     
         <a id="liveagent_button_online_5731500000008OV" href="javascript://Chat" style="display: none;" onclick="liveagent.startChat('5731500000008OV')"><!-- Online Chat Content -->Chat Now</a>
         <div id="liveagent_button_offline_5731500000008OV" style="display: none;"><!-- Offline Chat Content -->Sorry, there are no available agents</div>
@@ -97,3 +102,4 @@
         </script>
     </body>
 </html>
+    
