@@ -15,9 +15,8 @@
         }
     </style>
     
-    <script type='text/javascript' src='https://service.force.com/embeddedservice/5.0/esw.min.js'></script>
-    <script type='text/javascript'>
-        /*function decodeTextEndChat1(){
+    <script>
+        function decodeTextEndChat1(){
             if($(".messageWrapper")[0]){
                 var elementArray = $(".messageWrapper")[0].childNodes;
                 for(var i=1 ; i< elementArray.length ;i++)
@@ -32,52 +31,56 @@
                 clearInterval(myVar1);
                 decodeTextEndChat1();
              }
-        }, 0); */
-
-        var getLoggedInUserdetails =  function() {
-            var userDetails = {};
-            var gatewayCutomer = window.sessionStorage.getItem('GatewayCustomer');
-            if(gatewayCutomer) {
-                var gatewayCutomerObject = JSON.parse(gatewayCutomer);
-                if(gatewayCutomerObject && gatewayCutomerObject.preferredCustomer && gatewayCutomerObject.preferredCustomer.accountNbr) {
-                    userDetails = { 
-                        "fname" : gatewayCutomerObject.name.firstName, 
-                        "lname" : gatewayCutomerObject.name.lastName, 
-                        "email" : gatewayCutomerObject.email
-                        };
-                }                  
-            }
-            return JSON.stringify(userDetails);
-        };
-    
-        let loggedInUserDetails = getLoggedInUserdetails();
-    
-        // Function that creates the Privacy Statement in the pre-chat form and also closes out the mutation observer.
-        var createPrivacyStatement = function(observer) {
-            var privacyDiv = document.createElement('DIV');
-            privacyDiv.className = 'embeddedChatPrivacy';
-            var privacyTextA = document.createTextNode("This chat may be logged and monitored. Please avoid sharing sensitive information such as payment information, social security numbers or passwords. ");
-            var privacyTextB = document.createTextNode(" about Western Union's privacy practices.");
-            var a = document.createElement('a');
-            var linkText = document.createTextNode("Learn more");
-            a.appendChild(linkText);
-            a.title = "Learn more";
-            a.href = "https://partners.westernunion.com/content/wucom/global/en/privacy-statement.html";
-            a.target = '_blank';
-            privacyDiv.appendChild(privacyTextA);
-            privacyDiv.appendChild(a);
-            privacyDiv.appendChild(privacyTextB);
-            document.querySelector("div.formContent.embeddedServiceSidebarForm").appendChild(privacyDiv);
-            $('.buttonWrapper').appendTo($('div.formContent.embeddedServiceSidebarForm'));
+        }, 0); 
+                    
             
-            if(observer) {
-                console.log('observer not null, disconnecting');
-                observer.disconnect();
+            
+        src='https://service.force.com/embeddedservice/5.0/esw.min.js';
+            // Retrieve the logged in user details from browser sessionStorage. This snippet provided by WU team
+           var getLoggedInUserdetails =  function() {
+                var userDetails = {};
+                var gatewayCutomer = window.sessionStorage.getItem('GatewayCustomer');
+                if(gatewayCutomer) {
+                    var gatewayCutomerObject = JSON.parse(gatewayCutomer);
+                    if(gatewayCutomerObject && gatewayCutomerObject.preferredCustomer && gatewayCutomerObject.preferredCustomer.accountNbr) {
+                        userDetails = { 
+                            "fname" : gatewayCutomerObject.name.firstName, 
+                            "lname" : gatewayCutomerObject.name.lastName, 
+                            "email" : gatewayCutomerObject.email
+                            };
+                    }                  
+                }
+                return JSON.stringify(userDetails);
+            };
+        
+            let loggedInUserDetails = getLoggedInUserdetails();
+        
+            // Function that creates the Privacy Statement in the pre-chat form and also closes out the mutation observer.
+            var createPrivacyStatement = function(observer) {
+                var privacyDiv = document.createElement('DIV');
+                privacyDiv.className = 'embeddedChatPrivacy';
+                var privacyTextA = document.createTextNode("This chat may be logged and monitored. Please avoid sharing sensitive information such as payment information, social security numbers or passwords. ");
+                var privacyTextB = document.createTextNode(" about Western Union's privacy practices.");
+                var a = document.createElement('a');
+                var linkText = document.createTextNode("Learn more");
+                a.appendChild(linkText);
+                a.title = "Learn more";
+                a.href = "https://partners.westernunion.com/content/wucom/global/en/privacy-statement.html";
+                a.target = '_blank';
+                privacyDiv.appendChild(privacyTextA);
+                privacyDiv.appendChild(a);
+                privacyDiv.appendChild(privacyTextB);
+                document.querySelector("div.formContent.embeddedServiceSidebarForm").appendChild(privacyDiv);
+                $('.buttonWrapper').appendTo($('div.formContent.embeddedServiceSidebarForm'));
+                
+                if(observer) {
+                    console.log('observer not null, disconnecting');
+                    observer.disconnect();
+                }
             }
-        }
-
-        var initESW = function(gslbBaseURL) {
-            embedded_svc.settings.displayHelpButton = true; //Or false
+        
+            var initESW = function(gslbBaseURL) {
+                embedded_svc.settings.displayHelpButton = true; //Or false
                 embedded_svc.settings.language = 'en'; //For example, enter 'en' or 'en-US'
                 embedded_svc.settings.avatarImgURL = 'https://www.westernunion.com/content/dam/wu/us/en/Logo_40x40.png';
                 embedded_svc.settings.defaultMinimizedText = 'Chat'; //(Defaults to Chat with an Expert)
@@ -311,34 +314,119 @@
                 embedded_svc.addEventHandler("onChatConferenceInitiated", function(data) {           
                  console.log("onChatReconnectSuccessful event was fired.");
                 });
-    
-            embedded_svc.init(
-                'https://wuicare--chatbot.my.salesforce.com',
-                'https://chatbot-wucare.cs17.force.com/care',
-                gslbBaseURL,
-                '00Dg0000006VugZ',
-                'WUCare_Embedded_Service_Non_Auth',
-                {
-                    baseLiveAgentContentURL: 'https://c.la1-c1cs-ord.salesforceliveagent.com/content',
-                    deploymentId: '5721500000007Ds',
-                    buttonId: '5731500000008OV',
-                    baseLiveAgentURL: 'https://d.la1-c1cs-ord.salesforceliveagent.com/chat',
-                    eswLiveAgentDevName: 'EmbeddedServiceLiveAgent_Parent04I1C000000k9bNUAQ_16d622f4afb',
-                    isOfflineSupportEnabled: false
-                }
-            );
-        };
-    
-        if (!window.embedded_svc) {
-            var s = document.createElement('script');
-            s.setAttribute('src', 'https://wuicare--chatbot.my.salesforce.com/embeddedservice/5.0/esw.min.js');
-            s.onload = function() {
-                initESW(null);
+        
+                // Check to see if user is logged in or not
+                if(loggedInUserDetails === '{}') {
+                     // This event handler triggers when the chat button is clicked and causes a creation of a mutation observer so that a privacy statement can be dynamically added when the pre-chat form loads.
+                    embedded_svc.addEventHandler("onHelpButtonClick", function(data) {
+                        //For Amplitude Tracking in Non Logged in State
+                       // console.log("Chat Test 123456789 click");
+                        if(amplitude && amplitude.getInstance && amplitude.getInstance().logEvent){
+                                var eventInfo = window.getAnalyticsData ? window.getAnalyticsData() :{}
+                                 amplitude.getInstance().logEvent('clicked_[widget-chat]', eventInfo);
+                        } 
+                        const targetNode = document.body;
+                        const config = { attributes: true, subtree: true};
+                        // Callback function to execute when mutations are observed
+                        const mutationCallback = function(mutationsList, observer) {
+                            for(let mutation of mutationsList) {
+                                if (mutation.type === 'attributes' && mutation.target.className === 'Email slds-style-inputtext input') {
+                                    createPrivacyStatement(observer);
+                                    break;
+                                }
+                            }
+                        };
+                        // Create an observer instance linked to the callback function
+                        const observer = new MutationObserver(mutationCallback);
+        
+                        // Start observing the target node for configured mutations
+                        observer.observe(targetNode, config);
+                    });
+                    /**** TODO ****
+                        - Change the parameters below for each different org, the below corresponds to the embedded service deployment that has pre-chat enabled (non-auth). 
+                        - To get the code below, go to Setup>Embedded Service> Get Code
+                    */
+                    embedded_svc.init(
+                        'https://wuicare--chatbot.my.salesforce.com',
+                        'https://chatbot-wucare.cs17.force.com/care',
+                        gslbBaseURL,
+                        '00Dg0000006VugZ',
+                        'WUCare_Embedded_Service_Non_Auth',
+                        {
+                            baseLiveAgentContentURL: 'https://c.la1-c1cs-ord.salesforceliveagent.com/content',
+                            deploymentId: '5721500000007Ds',
+                            buttonId: '5731500000008OV',
+                            baseLiveAgentURL: 'https://d.la1-c1cs-ord.salesforceliveagent.com/chat',
+                            eswLiveAgentDevName: 'EmbeddedServiceLiveAgent_Parent04I1C000000k9bNUAQ_16d622f4afb',
+                            isOfflineSupportEnabled: false
+                        }
+                    );
+                } else {
+                     
+                    /* Mapping the values from the sessionStorage to pre-chat values to pass into Salesforce */
+                    const loggedInUser = JSON.parse(loggedInUserDetails);
+                    const tempFirstName = {
+                        "label": "First Name",
+                        "value": loggedInUser.fname,
+                        "displayToAgent": true
+                    };
+                    const tempLastName = {
+                        "label": "Last Name",
+                        "value": loggedInUser.lname,
+                        "displayToAgent": true
+                    }; 
+                    const tempEmail = {
+                        "label": "Email",
+                        "value": loggedInUser.email,
+                        "displayToAgent": true
+                    };
+                    
+                    
+                    //For Amplitude Tracking in Logged in State
+                    embedded_svc.addEventHandler("onHelpButtonClick", function(data) {
+                        //console.log("Chat Test 123456789 click loggedin");
+                        if(amplitude && amplitude.getInstance && amplitude.getInstance().logEvent){
+                                var eventInfo = window.getAnalyticsData ? window.getAnalyticsData() :{}
+                                 amplitude.getInstance().logEvent('clicked_[widget]_[chat]', eventInfo);
+                        }
+                    })
+        
+                    embedded_svc.settings.extraPrechatFormDetails.unshift(tempFirstName, tempLastName, tempEmail);
+                    /**** TODO ****
+                        - Change the parameters below for each different org, the below corresponds to the embedded service deployment that has pre-chat disabled. 
+                        - To get the code below, go to Setup>Embedded Service> Get Code
+                    */
+                    embedded_svc.init(
+                        'https://wuicare--chatbot.my.salesforce.com',
+                        'https://chatbot-wucare.cs17.force.com/care',
+                        gslbBaseURL,
+                        '00Dg0000006VugZ',
+                        'WUCare_Embedded_Service',
+                        {
+                            baseLiveAgentContentURL: 'https://c.la1-c1cs-ord.salesforceliveagent.com/content',
+                            deploymentId: '5721500000007Ds',
+                            buttonId: '5731500000008OV',
+                            baseLiveAgentURL: 'https://d.la1-c1cs-ord.salesforceliveagent.com/chat',
+                            eswLiveAgentDevName: 'EmbeddedServiceLiveAgent_Parent04I1C000000k9bSUAQ_16d62323227',
+                            isOfflineSupportEnabled: false
+                        }
+                    ); 
+                }        
             };
-            document.body.appendChild(s);
-        } else {
-            initESW('https://service.force.com');
-        }
+            /**** TODO ****
+                        - Change the src below in the s.setAttribute() to point to the right org.
+                        - To get the code below, go to Setup>Embedded Service> Get Code
+            */
+            if (!window.embedded_svc) {
+                var s = document.createElement('script');
+                s.setAttribute('src', 'https://wuicare--chatbot.my.salesforce.com/embeddedservice/5.0/esw.min.js');
+                s.onload = function() {
+                    initESW(null);
+                };
+                document.body.appendChild(s);
+            } else {
+                initESW('https://service.force.com');
+            }
     </script>
 
         <div class="embeddedServiceHelpButton">
