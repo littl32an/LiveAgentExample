@@ -384,11 +384,11 @@
                     
                     //For Amplitude Tracking in Logged in State
                     embedded_svc.addEventHandler("onHelpButtonClick", function(data) {
-                        //console.log("Chat Test 123456789 click loggedin");
-                        if(amplitude && amplitude.getInstance && amplitude.getInstance().logEvent){
+                        console.log("Chat Test 123456789 click loggedin");
+                        /*if(amplitude && amplitude.getInstance && amplitude.getInstance().logEvent){
                                 var eventInfo = window.getAnalyticsData ? window.getAnalyticsData() :{}
                                  amplitude.getInstance().logEvent('clicked_[widget]_[chat]', eventInfo);
-                        }
+                        }*/
                     })
         
                     embedded_svc.settings.extraPrechatFormDetails.unshift(tempFirstName, tempLastName, tempEmail);
