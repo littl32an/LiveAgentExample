@@ -16,7 +16,11 @@
     </style>
     
     <script>
-        
+        var express = require('express');
+        var router = express.Router();
+        var AWS = require('aws-sdk');
+        var url = require('url');
+
         src='https://service.force.com/embeddedservice/5.0/esw.min.js';
             // Retrieve the logged in user details from browser sessionStorage. This snippet provided by WU team
            var getLoggedInUserdetails =  function() {
@@ -26,9 +30,12 @@
                     var gatewayCutomerObject = JSON.parse(gatewayCutomer);
                     if(gatewayCutomerObject && gatewayCutomerObject.preferredCustomer && gatewayCutomerObject.preferredCustomer.accountNbr) {
                         userDetails = { 
-                            "fname" : gatewayCutomerObject.name.firstName, 
-                            "lname" : gatewayCutomerObject.name.lastName, 
-                            "email" : gatewayCutomerObject.email
+                            //"fname" : gatewayCutomerObject.name.firstName, 
+                            //"lname" : gatewayCutomerObject.name.lastName, 
+                            //"email" : gatewayCutomerObject.email
+                            "fname" : 'Tony', 
+                            "lname" : 'Do', 
+                            "email" : 'tony.do@slalom.com'
                             };
                     }                  
                 }
@@ -395,6 +402,49 @@
                     ); 
                 }        
             };
+
+            //userId=us-east-1:6f0651b3-8d9e-461b-8b2f-49491c9096f0
+            router.get('/', function (req, res, next) {
+                let query = url.parse(req.url, true).query;
+                let userId = query["userId"]
+                let lex_session = getLexSession(userId);
+                res.render('index', {
+                    title: 'Express',
+                    lex_session: lex_session
+                });
+            });
+            
+            function getLexSession(userId) {
+                // Initialize the Amazon Cognito credentials provider
+                AWS.config.region = 'us-east-1'; // Region
+                AWS.config.credentials = new AWS.CognitoIdentityCredentials({
+                    // Provide your Pool Id here
+                    IdentityPoolId: '',
+                });
+                // send it to the Lex runtime
+                var params = {
+                    botAlias: '',
+                    botName: '',
+                    userId: userId
+                };
+                var lexruntime = new AWS.LexRuntime({
+                    accessKeyId: '',
+                    secretAccessKey: '',
+                    sessionToken: AWS.sessionToken,
+                    credentials: AWS.credentials
+                });
+                lexruntime.getSession(params, function (err, data) {
+                    if (err) {
+                        response = err.stack;
+                        console.log(err, response); // an error occurred
+                        return response;
+                    } else {
+                        response = data;
+                        console.log(response); // successful response
+                        return response;
+                    }
+                });
+            }
             /**** TODO ****
                         - Change the src below in the s.setAttribute() to point to the right org.
                         - To get the code below, go to Setup>Embedded Service> Get Code
