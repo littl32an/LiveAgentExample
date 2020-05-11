@@ -458,9 +458,10 @@
                     //console.log(document.querySelector('.embeddedServiceHelpButton'));
                     var helpButton = document.getElementsByClassName('embeddedServiceHelpButton');
                     for(var i = 0; i < helpButton.length; i++) {
+                        console.log('helpButton: ' + helpButton[i]);
                         helpButton[i].click();
                     }
-                    
+
                     console.log('userid: ' + urlParams.get('userId'));
                     initESW(null);
                 };
