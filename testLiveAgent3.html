@@ -455,7 +455,8 @@
                 s.onload = function() {
                     var urlParams = new URLSearchParams(window.location.search);
                     //document.getElementById('5731500000008OV').click();
-                    console.log(document.querySelector('.embeddedServiceHelpButton'));
+                    //console.log(document.querySelector('.embeddedServiceHelpButton'));
+                    console.log(document.getElementsByClassName('embeddedServiceHelpButton'));
                     console.log('userid: ' + urlParams.get('userId'));
                     initESW(null);
                 };
