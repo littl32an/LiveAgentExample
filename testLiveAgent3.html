@@ -455,7 +455,7 @@
                 s.onload = function() {
                     var urlParams = new URLSearchParams(window.location.search);
                     //document.getElementById('5731500000008OV').click();
-                    console.log(document.getElementsByClassName('helpButtonEnabled')[0]);
+                    console.log(document.querySelector('.helpButtonEnabled').id);
                     console.log('userid: ' + urlParams.get('userId'));
                     initESW(null);
                 };
