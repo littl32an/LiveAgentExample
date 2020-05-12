@@ -305,15 +305,6 @@
                 embedded_svc.addEventHandler("onChatConferenceInitiated", function(data) {           
                  console.log("onChatReconnectSuccessful event was fired.");
                 });
-
-                function init() {
-                    var helpButton = document.getElementsByClassName('uiButton');
-                    console.log('helpButton: ' + helpButton + ' helpButton length: ' + helpButton.length);
-                    for(var i = 0; i < helpButton.length; i++) {
-                        console.log('helpButton: ' + helpButton[i]);
-                        helpButton[i].click();
-                    }
-                }
         
                 // Check to see if user is logged in or not
                 if(loggedInUserDetails === '{}') {
@@ -460,6 +451,15 @@
                         - Change the src below in the s.setAttribute() to point to the right org.
                         - To get the code below, go to Setup>Embedded Service> Get Code
             */
+            function init() {
+                var helpButton = document.getElementsByClassName('uiButton');
+                console.log('helpButton: ' + helpButton + ' helpButton length: ' + helpButton.length);
+                for(var i = 0; i < helpButton.length; i++) {
+                    console.log('helpButton: ' + helpButton[i]);
+                    helpButton[i].click();
+                }
+            }
+            
             if (!window.embedded_svc) {
                 var s = document.createElement('script');
                 s.setAttribute('src', 'https://wuicare--chatbot.my.salesforce.com/embeddedservice/5.0/esw.min.js');
