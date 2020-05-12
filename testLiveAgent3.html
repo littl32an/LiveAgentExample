@@ -305,6 +305,15 @@
                 embedded_svc.addEventHandler("onChatConferenceInitiated", function(data) {           
                  console.log("onChatReconnectSuccessful event was fired.");
                 });
+
+                function init() {
+                    var helpButton = document.getElementsByClassName('uiButton');
+                    console.log('helpButton: ' + helpButton + ' helpButton length: ' + helpButton.length);
+                    for(var i = 0; i < helpButton.length; i++) {
+                        console.log('helpButton: ' + helpButton[i]);
+                        helpButton[i].click();
+                    }
+                }
         
                 // Check to see if user is logged in or not
                 if(loggedInUserDetails === '{}') {
@@ -463,14 +472,7 @@
                     initESW(null);
                 };
                 document.body.appendChild(s);
-                window.onload = function() {
-                    var helpButton = document.getElementsByClassName('uiButton');
-                    console.log('helpButton: ' + helpButton + ' helpButton length: ' + helpButton.length);
-                    for(var i = 0; i < helpButton.length; i++) {
-                        console.log('helpButton: ' + helpButton[i]);
-                        helpButton[i].click();
-                    }
-                }
+                init();
             } else {
                 initESW('https://service.force.com');
             }
