@@ -308,7 +308,7 @@
             var urlParams = new URLSearchParams(window.location.search);
             console.log('userid: ' + urlParams.get('userId'));
 
-            var helpButtons = document.getElementsByClassName('uiButton');
+            var helpButtons = document.querySelectorAll('.uiButton');
 
             for(var i = 0; i < helpButtons.length; i++){
                 console.log('click');
