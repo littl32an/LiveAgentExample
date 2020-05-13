@@ -298,12 +298,14 @@
             var s = document.createElement('script');
             s.setAttribute('src', 'https://wuicare--chatbot.my.salesforce.com/embeddedservice/5.0/esw.min.js');
             s.onload = function() {
-                var urlParams = new URLSearchParams(window.location.search);
-                console.log('userid: ' + urlParams.get('userId'));
                 initESW(null);
             };
             document.body.appendChild(s);
         } else {
+            document.onload = function(){
+                var urlParams = new URLSearchParams(window.location.search);
+                console.log('userid: ' + urlParams.get('userId'));
+            }
             initESW('https://service.force.com');
         }
     </script>
