@@ -40,19 +40,24 @@
             //embedded_svc.settings.offlineSupportMinimizedText = '...'; //(Defaults to Contact Us)
             embedded_svc.snippetSettingsFile.extraPrechatFormDetails = [{
                 "label":"First Name", 
-                "transcriptFields": ["FirstName__c"]
+                "transcriptFields": ["FirstName__c"],
+                "displayToAgent":true
               },{
                 "label":"Last Name", 
-                "transcriptFields": ["LastName__c"]
+                "transcriptFields": ["LastName__c"],
+                "displayToAgent":true
               },{
                 "label":"Email", 
-                "transcriptFields": ["Email__c"]
+                "transcriptFields": ["Email__c"],
+                "displayToAgent":true
               },{
                 "label":"Store/Outlet Name", 
-                "transcriptFields": ["Store_Outlet_Name__c"]
+                "transcriptFields": ["Store_Outlet_Name__c"],
+                "displayToAgent":true
               },{
                 "label":"Store/Outlet Number", 
-                "transcriptFields": ["SNO__c"]
+                "transcriptFields": ["SNO__c"],
+                "displayToAgent":true
               }];
             embedded_svc.settings.enabledFeatures = ['LiveAgent'];
             embedded_svc.settings.entryFeature = 'LiveAgent';
